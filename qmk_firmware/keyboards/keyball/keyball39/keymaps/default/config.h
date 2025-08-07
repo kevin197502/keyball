@@ -37,3 +37,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 1
+layer_state_t layer_state_set_user(layer_state_t state) {
+
+    // Auto enable scroll mode on layer 2
+    keyball_set_scroll_mode(get_highest_layer(state) == 2);
+
+    // LOWER + RAISE = ADJUST のようなTri Layersを使う場合
+    // これを先に書いておかないと3の色がおかしくなる
+    state = update_tri_layer_state(state, 1, 2, 3);
+
+    uint8_t layer = biton32(state);
+    switch (layer) {
+        case 0:
+            rgblight_sethsv(HSV_RED);
+            break;
+        case 1:
+            rgblight_sethsv(HSV_BLUE);
+            break;
+        case 2:
+            rgblight_sethsv(HSV_GREEN);
+            break;
+        case 3:
+            rgblight_sethsv(HSV_WHITE);
+            break;
+    }
+
+    return state;
+}
